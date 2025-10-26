@@ -9,10 +9,31 @@ A comprehensive full-stack coding contest platform featuring real-time code judg
 - Node.js 18+ (for local development)
 - Java 17+ (for local development)
 
-### Option 1: Docker Compose (Recommended)
+### Option 1: Batch Scripts (Easiest)
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/Smridul3004/shodh-a-code-contest-platform-.git
+cd shodh-a-code-contest-platform
+
+# Start both backend and frontend together
+.\start-application.bat
+
+# Or start them separately:
+# Backend only
+.\start-backend-simple.bat
+
+# Frontend only (in a new terminal)
+.\start-frontend.bat
+
+# The application will be available at:
+# Frontend: http://localhost:3000
+# Backend: http://localhost:8080
+```
+
+### Option 2: Docker Compose (All-in-One)
+```bash
+# Clone the repository
+git clone https://github.com/Smridul3004/shodh-a-code-contest-platform-.git
 cd shodh-a-code-contest-platform
 
 # Start the entire application
@@ -23,16 +44,68 @@ docker-compose up --build
 # Backend: http://localhost:8080
 ```
 
-### Option 2: Local Development
+### Option 3: Manual Commands
 ```bash
-# Backend
-cd backend
-./mvnw spring-boot:run
+# Clone the repository
+git clone https://github.com/Smridul3004/shodh-a-code-contest-platform-.git
+cd shodh-a-code-contest-platform
 
-# Frontend (in a new terminal)
+# Backend (Terminal 1)
+cd backend
+set JAVA_HOME=C:\Program Files\Java\jdk-20
+.\mvnw.cmd spring-boot:run
+
+# Frontend (Terminal 2)
 cd frontend
 npm install
 npm run dev
+
+# The application will be available at:
+# Frontend: http://localhost:3000
+# Backend: http://localhost:8080
+```
+
+## 🧪 Testing the Application
+
+### Step 1: Access the Application
+1. **Open your browser** and navigate to: http://localhost:3000
+2. **Enter Contest ID**: `CONTEST001`
+3. **Enter Username**: `testuser` (or any username)
+4. **Click "Join Contest"**
+
+### Step 2: Test Features
+- ✅ **Problem View**: Browse through the 3 sample problems
+- ✅ **Code Editor**: Write Java code in the Monaco editor
+- ✅ **Code Submission**: Submit code and see real-time status updates
+- ✅ **Live Leaderboard**: View rankings that update automatically
+- ✅ **Real-time Updates**: Watch submission status change from "Pending" → "Running" → "Accepted/Wrong Answer"
+
+### Step 3: Sample Code to Test
+Try submitting this code for the "Sum of Two Numbers" problem:
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        System.out.println(a + b);
+    }
+}
+```
+
+### Step 4: Verify Backend API
+Test the API endpoints directly:
+```bash
+# Test contest endpoint
+curl http://localhost:8080/api/contests/CONTEST001
+
+# Test leaderboard endpoint
+curl http://localhost:8080/api/contests/CONTEST001/leaderboard
+
+# Test health check
+curl http://localhost:8080/actuator/health
 ```
 
 ## 📁 Project Structure
