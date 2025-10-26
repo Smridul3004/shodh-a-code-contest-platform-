@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+      - SPRING_H2_CONSOLE_ENABLED=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # For Docker-in-Docker
+    depends_on:
+      - code-judge
+    networks:
+      - shodh-network
+
+  # Code Execution Environment
+  code-judge:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: shodh-a-code-judge:latest
+    networks:
+      - shodh-network
+    # This service is used by the backend for code execution
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
+    depends_on:
+      - backend
+    networks:
+      - shodh-network
+
+networks:
+  shodh-network:
+    driver: bridge
+
+volumes:
+  backend-data:
